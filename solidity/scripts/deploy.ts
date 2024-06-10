@@ -9,9 +9,14 @@ async function main() {
   const token = await Token.deploy();
   await token.deployed();
 
+  const WCUToken = await ethers.getContractFactory("WCUToken");
+  const wcuToken = await WCUToken.deploy(5000);
+  await wcuToken.deployed();
+
   console.log("Contracts deployed!\nAdd the addresses to backend/index.ts:");
   console.log(`SIMPLE_STORAGE_ADDRESS: ${simpleStorage.address}`);
   console.log(`TOKEN_ADDRESS: ${token.address}`);
+  console.log(`WCU_ADDRESS: ${wcuToken.address}`)
 }
 
 main()

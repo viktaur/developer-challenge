@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import "./App.css";
+import Provider from "./Provider";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -74,45 +75,80 @@ function App() {
     setDesiredValue(event.currentTarget.value);
   }
 
+  const totalSupply = ;
+
+  const providers = [
+    {
+      name: "Benson Woods",
+      description: "Benson Woods is a serene, picturesque woodland area known for its lush greenery, diverse wildlife, and tranquil walking trails. Perfect for nature enthusiasts, it offers a peaceful escape for hiking, birdwatching, and picnicking amidst the beauty of mature trees and seasonal wildflowers.",
+      image: "",
+      availability: 1573,
+      price: 0.2
+    },
+    {
+      name: "Blatherwycke Estate",
+      description: "Blatherwycke Estate is a historic property renowned for its elegant architecture, expansive gardens, and rich cultural heritage. The estate features a stately mansion, beautifully landscaped grounds, and scenic walking paths, making it a popular destination for history buffs, garden enthusiasts, and those seeking a picturesque setting for leisurely strolls and special events.",
+      image: "",
+      availability: 2405,
+      price: 0.23
+    },
+    {
+      name: "Forest of Marston Vale",
+      description: "The Forest of Marston Vale is a vibrant environmental regeneration project transforming 61 square miles of Bedfordshire countryside. It features extensive woodlands, diverse wildlife habitats, and a network of trails for walking, cycling, and horseback riding. This community-driven initiative aims to enhance biodiversity, promote sustainable land use, and provide a green space for recreation and education, creating a lasting legacy for future generations.",
+      image: "",
+      availability: 1802,
+      price: 0.25
+    }
+  ]
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img
-          src={"/kaleido_logo.svg"}
-          className="App-logo"
-          alt="logo"
-          aria-busy={loading}
-        />
-        <p>
-          <input className="App-input" onChange={handleChange} />
-          <button
-            type="button"
-            className="App-button"
-            onClick={setContractValue}
-          >
-            Set Value
-          </button>
-        </p>
-        <p>
-          <button
-            type="button"
-            className="App-button"
-            onClick={getContractValue}
-          >
-            Get Value
-          </button>
-          {value !== "" ? <p>Retrieved value: {value}</p> : <p>&nbsp;</p>}
-        </p>
-        <p>
-          <button type="button" className="App-button" onClick={mintToken}>
-            Mint a Token
-          </button>
-          {tokenId !== "" ? <p>Minted Token ID: {tokenId}</p> : <p>&nbsp;</p>}
-        </p>
-        {errorMsg && <pre className="App-error">Error: {errorMsg}</pre>}
-      </header>
+  //   <div className="App">
+  //     <header className="App-header">
+  //       <img
+  //         src={"/kaleido_logo.svg"}
+  //         className="App-logo"
+  //         alt="logo"
+  //         aria-busy={loading}
+  //       />
+  //       <p>
+  //         <input className="App-input" onChange={handleChange} />
+  //         <button
+  //           type="button"
+  //           className="App-button"
+  //           onClick={setContractValue}
+  //         >
+  //           Set Value
+  //         </button>
+  //       </p>
+  //       <p>
+  //         <button
+  //           type="button"
+  //           className="App-button"
+  //           onClick={getContractValue}
+  //         >
+  //           Get Value
+  //         </button>
+  //         {value !== "" ? <p>Retrieved value: {value}</p> : <p>&nbsp;</p>}
+  //       </p>
+  //       <p>
+  //         <button type="button" className="App-button" onClick={mintToken}>
+  //           Mint a Token
+  //         </button>
+  //         {tokenId !== "" ? <p>Minted Token ID: {tokenId}</p> : <p>&nbsp;</p>}
+  //       </p>
+  //       {errorMsg && <pre className="App-error">Error: {errorMsg}</pre>}
+  //     </header>
+  //   </div>
+  // );
+  <div className="App">
+    <div className="listing">
+      <h1>Buy carbon offset</h1>
+      {providers.map(e => (
+        <Provider {...e} />
+      ))}
     </div>
-  );
+  </div>
+  )
 }
 
 export default App;
