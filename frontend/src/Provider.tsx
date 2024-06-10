@@ -1,10 +1,9 @@
-
-
-export default function Provider({ name, description, image, availability, price}) {
+export default function Provider({ name, address, description, image, price, availability}) {
     return (
         <div className="provider-container">
             <div className="left-side">
                 <h2>{name}</h2>
+                <h2>{address}</h2>
                 <p>{description}</p>
                 <div className="info-action">
                     <div style={{display: "flex", flexDirection:"column"}}>

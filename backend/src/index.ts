@@ -4,14 +4,15 @@ import express from "express";
 import simplestorage from "../../solidity/artifacts/contracts/simple_storage.sol/SimpleStorage.json";
 import token from "../../solidity/artifacts/contracts/token.sol/Token.json";
 import wcu from "../../solidity/artifacts/contracts/WCU_token.sol/WCUToken.json"
+import { error } from "console";
 
 const PORT = 4001;
 // const HOST = "http://localhost:5000";
-const HOST = "localhost"
+const HOST = "http://localhost:4001"
 const NAMESPACE = "default";
-const SIMPLE_STORAGE_ADDRESS = "0xE0D3AFABE1A9e78dbB47891d042ba02fD32Af55B";
-const TOKEN_ADDRESS = "0xf65EE03499d6592Cd1e0e750Bec23C94CDF04957";
-const WCU_ADDRESS = ""; // TODO
+const SIMPLE_STORAGE_ADDRESS = "0x5B9cc26e59D04Ce0264a0d940f128345fdD37D51";
+const TOKEN_ADDRESS = "0xe5Bb2BE34d3a753322c58CaE2B97b3126b85Af83";
+const WCU_ADDRESS = "0xa1F64E7a63Ce6337fCAB03e47C1Cacc7c451db19"; // TODO
 const app = express();
 const firefly = new FireFly({
   host: HOST,
@@ -69,6 +70,73 @@ app.post("/api/mintToken", async (req, res) => {
     res.status(500).send({
       error: e.message,
     });
+  }
+});
+
+// WCU Token:
+app.get("/api/totalSuply", async (req, res) => {
+  res.send(await firefly.queryContractAPI(wcuApiName, "totalSupply", {}));
+});
+
+app.get("/api/balanceOf/:address", async(req, res) => {
+  try {
+    const address = req.params.address;
+    const fireflyRes = await firefly.queryContractAPI(
+      wcuApiName,
+      "balanceOf",
+      {
+        input: {
+          address
+        }
+      }
+    );
+    res.status(200).send({
+      balance: fireflyRes.output
+    });
+  } catch (e: any) {
+    res.status(500).send({
+      error: e.message
+    })
+  }
+});
+
+app.post("/api/mint", async (req, res) => {
+  const { address, amount } = req.body;
+  
+  try {
+    const ownerRes = await firefly.queryContractAPI(
+      wcuApiName,
+      "owner",
+      {}
+    );
+
+    const ownerAddress = ownerRes.output;
+
+    // Check if caller matches owner address 
+    if (address.toLowerCase() !== (ownerAddress as string).toLowerCase()) {
+      return res.status(403).send({
+        error: "Caller is not the owner",
+      });
+    }
+
+    const fireflyRes = await firefly.invokeContractAPI(
+      wcuApiName,
+      "mint",
+      {
+        input: {
+          account: address,
+          amount: amount
+        }
+      }
+    );
+
+    res.status(202).send({
+      transactionId: fireflyRes.id
+    });
+  } catch (e: any) {
+    res.status(500).send({
+      error: e.message
+    })
   }
 });
 
