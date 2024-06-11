@@ -1,6 +1,9 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import "./App.css";
 import Provider from "./Provider";
+import { createClient } from "wagmi";
+import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains"; 
+import { getDefaultClient } from "connectkit";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -8,6 +11,7 @@ function App() {
   const [desiredValue, setDesiredValue] = useState("test");
   const [value, setValue] = useState("");
   const [tokenId, setTokenId] = useState("");
+  const [balances, setBalances] = useState({});
 
   // async function setContractValue() {
   //   setLoading(true);
@@ -89,14 +93,16 @@ function App() {
     setLoading(false);
   }
 
-  async function getBalanceOf(address: string) {
+  async function fetchBalanceOf(address: string) {
     setLoading(true);
     setErrorMsg(null);
     try {
       const res = await fetch('/api/balanceOf/' + address, {
         method: "GET",
         headers: { "Content-Type": "application/json" }
-      })
+      });
+      const data = await res.json();
+      setBalances(prevBalances => ({ ...prevBalances, [address]: data.balance}))
     } catch (e: any) {
       setErrorMsg(e.stack);
     }
@@ -112,27 +118,32 @@ function App() {
       name: "Benson Woods",
       address: "0x8a25d77dffeecb93ab1ef1d9cf1c2a637ac6c0b1",
       description: "Benson Woods is a serene, picturesque woodland area known for its lush greenery, diverse wildlife, and tranquil walking trails. Perfect for nature enthusiasts, it offers a peaceful escape for hiking, birdwatching, and picnicking amidst the beauty of mature trees and seasonal wildflowers.",
-      image: "",
-      // availability: 1573,
+      imageCid: "QmSmuHyJ2VkfmhTmua9AuWkqPY2KGa7hyUEJwgsapvtiea",
       price: 0.2
     },
     {
       name: "Blatherwycke Estate",
       address: "0xed81284e0e48e922230062b8b827c71562c10245",
       description: "Blatherwycke Estate is a historic property renowned for its elegant architecture, expansive gardens, and rich cultural heritage. The estate features a stately mansion, beautifully landscaped grounds, and scenic walking paths, making it a popular destination for history buffs, garden enthusiasts, and those seeking a picturesque setting for leisurely strolls and special events.",
-      image: "",
-      // availability: 2405,
+      imageCid: "QmeVCbXDdR35c3fR8UoZ1R3LLkuPPqXEUfwhm766WGnWKK",
       price: 0.23
     },
     {
       name: "Forest of Marston Vale",
-      address: "",
+      address: "0x409122347a731e5c909b970ced8432c32ce22d5e",
       description: "The Forest of Marston Vale is a vibrant environmental regeneration project transforming 61 square miles of Bedfordshire countryside. It features extensive woodlands, diverse wildlife habitats, and a network of trails for walking, cycling, and horseback riding. This community-driven initiative aims to enhance biodiversity, promote sustainable land use, and provide a green space for recreation and education, creating a lasting legacy for future generations.",
-      image: "",
-      // availability: 1802,
+      imageCid: "QmeR28294waHLpFtqc1shN6GKvotGrYRFV4J7n9Rbg8baW",
       price: 0.25
     }
   ]
+
+  useEffect(() => {
+    providers.forEach(p => {
+      fetchBalanceOf(p.address);
+      console.log(`Current balances are ${balances}`)
+      console.log(`Balance of ${p.address} is ${balances[p.address]}`);
+    });
+  }, []);
 
   return (
   //   <div className="App">
@@ -177,7 +188,7 @@ function App() {
     <div className="listing">
       <h1>Buy carbon offset</h1>
       {providers.map(e => (
-        <Provider key={e.address} {...e} availability={getBalanceOf(e.address)} />
+        <Provider key={e.address} {...e} availability={balances[e.address]} />
       ))}
     </div>
   </div>

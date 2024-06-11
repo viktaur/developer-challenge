@@ -7,12 +7,11 @@ import wcu from "../../solidity/artifacts/contracts/WCU_token.sol/WCUToken.json"
 import { error } from "console";
 
 const PORT = 4001;
-// const HOST = "http://localhost:5000";
-const HOST = "http://localhost:4001"
+const HOST = "http://localhost:8000";
 const NAMESPACE = "default";
 const SIMPLE_STORAGE_ADDRESS = "0x5B9cc26e59D04Ce0264a0d940f128345fdD37D51";
 const TOKEN_ADDRESS = "0xe5Bb2BE34d3a753322c58CaE2B97b3126b85Af83";
-const WCU_ADDRESS = "0xa1F64E7a63Ce6337fCAB03e47C1Cacc7c451db19"; // TODO
+const WCU_ADDRESS = "0xa1F64E7a63Ce6337fCAB03e47C1Cacc7c451db19";
 const app = express();
 const firefly = new FireFly({
   host: HOST,
@@ -86,10 +85,11 @@ app.get("/api/balanceOf/:address", async(req, res) => {
       "balanceOf",
       {
         input: {
-          address
+          account: address
         }
       }
     );
+    console.log(fireflyRes.output)
     res.status(200).send({
       balance: fireflyRes.output
     });
