@@ -1,9 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import "./App.css";
 import Provider from "./Provider";
-import { createClient } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains"; 
-import { getDefaultClient } from "connectkit";
+import { DiscoverWalletProviders } from "./components/DiscoverWalletProviders"
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -186,6 +184,7 @@ function App() {
   // );
   <div className="App">
     <div className="listing">
+      <DiscoverWalletProviders/>
       <h1>Buy carbon offset</h1>
       {providers.map(e => (
         <Provider key={e.address} {...e} availability={balances[e.address]} />

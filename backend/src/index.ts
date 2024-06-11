@@ -11,7 +11,7 @@ const HOST = "http://localhost:8000";
 const NAMESPACE = "default";
 const SIMPLE_STORAGE_ADDRESS = "0x5B9cc26e59D04Ce0264a0d940f128345fdD37D51";
 const TOKEN_ADDRESS = "0xe5Bb2BE34d3a753322c58CaE2B97b3126b85Af83";
-const WCU_ADDRESS = "0xa1F64E7a63Ce6337fCAB03e47C1Cacc7c451db19";
+const WCU_ADDRESS = "0xEf4B00Fb5c917bb8c3Af06Dfb6AB2c67F8453FCE";
 const app = express();
 const firefly = new FireFly({
   host: HOST,
@@ -349,7 +349,7 @@ async function init() {
         events: "blockchain_event_received",
       },
     },
-    async (socket, event) => {
+    async (socket, event: any) => {
       console.log(
         `${event.blockchainEvent?.info.signature}: ${JSON.stringify(
           event.blockchainEvent?.output,
